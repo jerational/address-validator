@@ -1,0 +1,51 @@
+{
+  "Line1": {
+    "limit": 50,
+    "name": "addressLine1",
+    "required": true,
+    "optionalOr": [],
+    "optionalAll": []
+  },
+  "Line2": {
+    "limit": 50,
+    "name": "addressLine2",
+    "required": false,
+    "optionalOr": [],
+    "optionalAll": []
+  },
+  "Line3": {
+    "limit": 50,
+    "name": "addressLine3",
+    "required": false,
+    "optionalOr": [],
+    "optionalAll": []
+  },
+  "City": {
+    "limit": 50,
+    "name": "city",
+    "required": false,
+    "optionalOr": ["PostalCode"],
+    "optionalAll": []
+  },
+  "Region": {
+    "limit": 3,
+    "name": "region",
+    "required": false,
+    "optionalOr": ["PostalCode"],
+    "optionalAll": []
+  },
+  "Country": {
+    "limit": 50,
+    "name": "countryCode",
+    "required": false,
+    "optionalOr": [],
+    "optionalAll": []
+  },
+  "PostalCode": {
+    "limit": 11,
+    "name": "postalCode",
+    "required": false,
+    "optionalOr": [],
+    "optionalAll": ["City", "Region"]
+  }
+}

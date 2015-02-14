@@ -1,0 +1,6 @@
+{
+  "protocol": "https",
+  "host": "development.avalara.net",
+  "auth": "1100140443:472F60131809A633",
+  "pathname": "/1.0/address/validate"
+}
