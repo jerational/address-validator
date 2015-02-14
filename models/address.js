@@ -7,24 +7,20 @@ var request = require('request'),
     url = require('url');
 
 
-module.exports.get = function(rawAddress, callback) {
-
+module.exports.getNormalAddress = function(rawAddress, callback) {
     var queryObj = createQuery(rawAddress),
-        formErrors = checkRules(queryObj);
-    console.log(formErrors);
+        isValid = isFormValid(queryObj);
 
-    if (formErrors) {
-        callback(formErrors)
+    if (isValid) {
+        callback(isValid)
     } else {
         request(buildURL(queryObj), function(err, response, body) {
-            console.log(response);
             if (err) {
                 console.log(err);                               //Usually different log
                 callback(new Error("Internal Service Error"));  //in case error is internal
             } else {
                 parseResponse(body, callback);
             }
-
         });
     }
 };
@@ -45,18 +41,18 @@ function createQuery(rawAddress) {
     return queryObj;
 }
 
+//Needs to be built out
 function parseResponse(message, callback) {
     message = JSON.parse(message);
     console.log(message);
     if (message.ResultCode === "Success") {
-        callback(null, message);
+        callback(null, null, message);
     } else {
-        console.log("reaches here?")
-        callback(new Error(JSON.stringify(message, null, '\t')));
+        callback(null, message);
     }
 }
 
-function checkRules(queryObj) {
+function isFormValid(queryObj) {
     var keys = Object.keys(rules);
     for(var i = 0; i < keys.length; i++) {
         var key = keys[i];
@@ -70,47 +66,47 @@ function checkRules(queryObj) {
             return new Error("Field is too long: " + rules[key].name);
         }
     }
-    return null;
 
+    return null;
 }
 
 function validateLength(field, key) {
-    console.log(field);
-    console.log(rules[key].limit);
     if (!(typeof field === 'string')){
         return false;
     }
+
     return (field.length <= rules[key].limit);
 }
 
+//Can be consolidated into one method
 function validateOptionalAll(queryObj, key) {
     var optAll = rules[key].optionalAll;
     if (optAll.length === 0) {
         return true;
     }
+
     for (var i = 0; i < optAll.length; i++) {
         var curr = optAll[i];
         if (!(queryObj[curr] && validateLength(queryObj[curr], curr))) {
             return false;
         }
     }
+
     return true;
 }
-
 
 function validateOptionalOr(queryObj, key) {
     var optOr = rules[key].optionalOr;
     if (optOr.length === 0) {
         return true;
     }
-    var valid = false;
+
     for (var i = 0; i < optOr.length; i++) {
         var curr = optOr[i];
         if (queryObj[curr] && validateLength(queryObj[curr], curr)) {
-            valid = true;
+            return true;
         }
     }
 
-    console.log("key %s is %s", key, valid);
-    return valid;
+    return false;
 }

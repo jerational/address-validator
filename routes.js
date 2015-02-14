@@ -1,4 +1,4 @@
-var addresses = require('./controllers/addresses')
+var addresses = require('./controllers/addresses');
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
