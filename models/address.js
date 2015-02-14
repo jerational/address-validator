@@ -2,7 +2,7 @@
  * Created by jerational on 2/13/15.
  */
 var request = require('request'),
-    rules = require('./form-rules'),
+    rules = require('./configurables/form-rules'),
     query = require('querystring'),
     url = require('url');
 
@@ -11,6 +11,7 @@ module.exports.getNormalAddress = function(rawAddress, callback) {
     var queryObj = createQuery(rawAddress),
         isValid = isFormValid(queryObj);
 
+    //if form error, saves API call
     if (isValid) {
         callback(isValid)
     } else {
@@ -26,7 +27,7 @@ module.exports.getNormalAddress = function(rawAddress, callback) {
 };
 
 function buildURL(queryObj) {
-    var urlObj = require('./config');
+    var urlObj = require('./configurables/url');
     urlObj.search = '?' + query.stringify(queryObj);
     return url.format(urlObj);
 }
